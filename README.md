@@ -39,4 +39,34 @@ The other variables that are used are `` [delta,beta]`` where delta is the steer
 I have incorported the bicycle model as the dynamic model of the car since it is easier to understand and linearise as well.The cvxpy library expects the state variables to be linear.The following are the update equations for the car:
  
 ![equation](http://latex.codecogs.com/gif.latex?x_%28t&plus;1%29%20%3D%20x_t%20&plus;%20v_t%20*%20cos%28%5Cpsi_t%29*dt)
+![equation](http://latex.codecogs.com/gif.latex?y_%28t&plus;1%29%20%3D%20y_t%20&plus;%20v_t%20*%20sin%28%5Cpsi_t%29*dt)
+
+![equation](http://latex.codecogs.com/gif.latex?%5Cpsi%20_%28t&plus;1%29%20%3D%20%5Cpsi%20_t%20&plus;%20%5Cfrac%7Bv_t%7D%7BL_f%7D*%20%5Cdelta_t%20*%20dt)
+
+![equation](http://latex.codecogs.com/gif.latex?v_%28t&plus;1%29%20%3D%20v%20_t%20&plus;%20a_t%20*%20dt)
+
+![equation](http://latex.codecogs.com/gif.latex?cte_%28t&plus;1%29%20%3D%20f%28x_t%29%20-%20y_t%20&plus;%20v%20_t%20*%20sin%28e%5Cpsi%20_t%29%20*%20dt)
+
+![equation](http://latex.codecogs.com/gif.latex?e%5Cpsi%20_%28t&plus;1%29%20%3D%20%5Cpsi%20_t%20-%20%5Cpsi%20dest%20&plus;%20%5Cfrac%7Bv_f%7D%7BL_f%7D%20*%20%5Cdelta_t%20*%20dt)
+
+
+``Lf`` measures the distance between the front of the vehicle an### 4.6 Latency
+
+In order to deal with the latency, we have to predict the next state before calling the MPC solver. It can be acoomplished using the Model equations. Below, the pseudocode to predict the next state. 
+
+
+### 2.4 Latency
+
+Before calling the MPC solver,the car is driven for the time that contributes to the latency i.e the time it takes actuator inputs to act phusically.Here dt is the latency caused by the system. 
+```c
+dt = 0.1;
+x1    = v * cos(0) * dt;
+y1    = v * sin(0) * dt;
+psi1  = - v/Lf * steer_value * dt;
+v1    = throttle_value * dt;
+cte1  =   v * sin(epsi1) * dt;
+epsi1 = - v * steer_value / Lf * dt;	
+```
+
+
 
